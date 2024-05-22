@@ -38,6 +38,54 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun JoinButton(onClick: (Boolean) -> Unit = {}) {
+    var buttonState: JoinButtonState
+            by remember { mutableStateOf(JoinButtonState.IDLE) }
+
+    val shape = RoundedCornerShape(corner = CornerSize(12.dp))
+
+    val buttonBackgroundColor: Color =
+        if (buttonState == JoinButtonState.PRESSED)
+            Color.White else
+            Color.Blue
+
+    val iconAssert: ImageVector =
+        if (buttonState == JoinButtonState.PRESSED)
+            Icons.Default.Check else
+            Icons.Default.Add
+    val iconTintColor: Color =
+        if (buttonState == JoinButtonState.PRESSED)
+            Color.Blue else
+            Color.White
+
+    Box(
+        modifier = Modifier
+            .clip(shape)
+            .border(width = 1.dp, color = Color.Blue, shape = shape)
+            .background(color = buttonBackgroundColor)
+            .size(
+                width = 40.dp,
+                height = 24.dp
+            )
+            .clickable(
+                onClick = {
+                    buttonState =
+                        if (buttonState == JoinButtonState.IDLE) {
+                            onClick.invoke(true)
+                            JoinButtonState.PRESSED
+                        } else {
+                            onClick.invoke(false)
+                            JoinButtonState.IDLE
+                        }
+                }),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = iconAssert,
+            contentDescription = "Plus Icon",
+            tint = iconTintColor,
+            modifier = Modifier.size(16.dp)
+        )
+    }
 }
 
 enum class JoinButtonState {
@@ -47,4 +95,4 @@ enum class JoinButtonState {
 @Composable
 fun JoinButtonPreview() {
     JoinButton(onClick = {})
-} 
+}
