@@ -1,5 +1,3 @@
-package com.topic3.android.reddit.components
-
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -24,46 +22,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.topic3.android.reddit.R
+import com.topic3.android.reddit.components.JoinButton
 import com.topic3.android.reddit.domain.model.PostModel
 import com.topic3.android.reddit.domain.model.PostModel.Companion.DEFAULT_POST
 
 @Composable
-fun TextPost(post: PostModel, onJoinButtonClick: (Boolean) -> Unit) {
-    Post(post) {
-        TextContent(post.text)
-    }
+fun TextPost(
+    post: PostModel,
+    onJoinButtonClick: (Boolean) -> Unit = {}
+) {
+    Post(post, onJoinButtonClick) { TextContent(post.text) }
 }
 
 @Composable
-fun ImagePost(post: PostModel , onJoinButtonClick: (Boolean) -> Unit) {
-    Post(post) {
-        ImageContent(post.image ?: R.drawable.compose_course)
-    }
+fun ImagePost(
+    post: PostModel,
+    onJoinButtonClick: (Boolean) -> Unit = {}
+) {
+    Post(post, onJoinButtonClick) { ImageContent(post.image!!) }
 }
 
 @Composable
-fun Post(post: PostModel, content: @Composable () -> Unit = {}) {
+fun Post(
+    post: PostModel,
+    onJoinButtonClick: (Boolean) -> Unit = {},
+    content: @Composable () -> Unit = {}
+) {
     Card(shape = MaterialTheme.shapes.large) {
         Column(
             modifier = Modifier.padding(
                 top = 8.dp, bottom = 8.dp
             )
         ) {
-            Header(post)
+
+            Header(post, onJoinButtonClick)
             Spacer(modifier = Modifier.height(4.dp))
             content.invoke()
             Spacer(modifier = Modifier.height(8.dp))
             PostActions(post)
         }
     }
-
 }
-
 @Composable
-fun Header(post: PostModel ,  onJoinButtonClick: (Boolean) -> Unit= {}) {
-    Row(modifier = Modifier.padding(start = 16.dp),
-        verticalAlignment = Alignment.CenterVertically)
-    {
+fun Header(
+    post: PostModel,
+    onJoinButtonClick: (Boolean) -> Unit = {}
+) {
+    Row(
+        modifier = Modifier.padding(start = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Image(
             ImageBitmap.imageResource(id = R.drawable.subreddit_placeholder),
             contentDescription = stringResource(id = R.string.subreddits),
@@ -89,12 +97,10 @@ fun Header(post: PostModel ,  onJoinButtonClick: (Boolean) -> Unit= {}) {
     }
     Title(text = post.title)
 }
-
 @Composable
 fun MoreActionsMenu() {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
@@ -102,7 +108,6 @@ fun MoreActionsMenu() {
                 contentDescription = stringResource(id = R.string.more_actions)
             )
         }
-
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
@@ -114,7 +119,6 @@ fun MoreActionsMenu() {
         }
     }
 }
-
 @Composable
 fun CustomDropdownMenuItem(
     @DrawableRes vectorResourceId: Int,
@@ -134,7 +138,6 @@ fun CustomDropdownMenuItem(
         }
     }
 }
-
 @Composable
 fun Title(text: String) {
     Text(
@@ -146,7 +149,6 @@ fun Title(text: String) {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
     )
 }
-
 @Composable
 fun TextContent(text: String) {
     Text(
@@ -160,7 +162,6 @@ fun TextContent(text: String) {
         maxLines = 3
     )
 }
-
 @Composable
 fun ImageContent(image: Int) {
     val imageAsset = ImageBitmap.imageResource(id = image)
@@ -173,7 +174,6 @@ fun ImageContent(image: Int) {
         contentScale = ContentScale.Crop
     )
 }
-
 @Composable
 fun PostActions(post: PostModel) {
     Row(
@@ -201,7 +201,6 @@ fun PostActions(post: PostModel) {
         )
     }
 }
-
 @Composable
 fun VotingAction(
     text: String,
@@ -220,9 +219,7 @@ fun VotingAction(
         )
         ArrowButton(onDownVoteAction, R.drawable.ic_baseline_arrow_downward_24)
     }
-
 }
-
 @Composable
 fun ArrowButton(onClickAction: () -> Unit, arrowResourceId: Int) {
     IconButton(onClick = onClickAction, modifier = Modifier.size(30.dp)) {
@@ -234,7 +231,6 @@ fun ArrowButton(onClickAction: () -> Unit, arrowResourceId: Int) {
         )
     }
 }
-
 @Composable
 fun PostAction(
     @DrawableRes vectorResourceId: Int,
@@ -254,13 +250,11 @@ fun PostAction(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun ArrowButtonPreview() {
     ArrowButton({}, R.drawable.ic_baseline_arrow_upward_24)
 }
-
 @Preview(showBackground = true)
 @Composable
 fun HeaderPreview() {
@@ -268,19 +262,16 @@ fun HeaderPreview() {
         Header(DEFAULT_POST)
     }
 }
-
 @Preview
 @Composable
 fun VotingActionPreview() {
     VotingAction("555", {}, {})
 }
-
 @Preview
 @Composable
 fun PostPreview() {
     Post(DEFAULT_POST)
 }
-
 @Preview
 @Composable
 fun TextPostPreview() {
@@ -288,7 +279,6 @@ fun TextPostPreview() {
         TextContent(DEFAULT_POST.text)
     }
 }
-
 @Preview
 @Composable
 fun ImagePostPreview() {
